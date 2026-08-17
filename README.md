@@ -59,13 +59,25 @@ The nine reports cover financed emissions (equity, bonds, loans), PCAF data qual
 ```
 conf/                  environment, source contracts, one YAML per report
 src/xpankki_esg/       the pipeline (plain functions, no frameworks)
-docs/                  architecture, data model, SAS→PySpark mapping, runbook
+docs/                  start here, architecture, reports, SAS mapping, runbook, recon
 notebooks/             thin Databricks wrappers; the CLI is the real entry point
 tests/                 entity resolution, PCAF, data quality, report smoke tests
 data/                  created at runtime, git-ignored
 ```
 
-Start with [docs/04_sas_to_pyspark_mapping.md](docs/04_sas_to_pyspark_mapping.md) if you know SAS and not Spark.
+Documentation:
+
+| Doc | Audience |
+|---|---|
+| [docs/00_start_here.md](docs/00_start_here.md) | Business / client walkthrough |
+| [docs/01_architecture.md](docs/01_architecture.md) | Flow locally and on Databricks |
+| [docs/02_data_model.md](docs/02_data_model.md) | Tables and entity resolution |
+| [docs/03_report_catalog.md](docs/03_report_catalog.md) | R01–R09 in plain language |
+| [docs/04_sas_to_pyspark_mapping.md](docs/04_sas_to_pyspark_mapping.md) | SAS developers |
+| [docs/05_runbook.md](docs/05_runbook.md) | Monthly run and failures |
+| [docs/06_reconciliation.md](docs/06_reconciliation.md) | Cutover / the two seeded diffs |
+| [docs/07_databricks_deployment.md](docs/07_databricks_deployment.md) | What changes in Azure |
+| [docs/assumptions.md](docs/assumptions.md) | Demo shortcuts to challenge |
 
 ## Commands (full list)
 

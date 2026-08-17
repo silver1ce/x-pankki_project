@@ -14,6 +14,17 @@ from pathlib import Path
 from pyspark.sql import SparkSession
 
 
+def _ensure_local_java() -> None:
+    """Point Spark at a JDK if the Mac stub /usr/bin/java is the only 'java' on PATH."""
+    bundled = Path.home() / ".jdks" / "temurin-17" / "bin" / "java"
+    current = os.environ.get("JAVA_HOME", "")
+    if current and Path(current, "bin", "java").exists():
+        return
+    if bundled.exists():
+        os.environ["JAVA_HOME"] = str(bundled.parent.parent)
+        os.environ["PATH"] = str(bundled.parent) + os.pathsep + os.environ.get("PATH", "")
+
+
 def is_databricks() -> bool:
     """Databricks Runtime sets this on every cluster; laptops do not."""
     return "DATABRICKS_RUNTIME_VERSION" in os.environ
@@ -34,6 +45,7 @@ def get_spark(cfg: dict) -> SparkSession:
 
     # Step 2: local session. Point Spark at the venv Python so executors do
     # not silently fall back to a system interpreter with no project packages.
+    _ensure_local_java()
     os.environ.setdefault("PYSPARK_PYTHON", sys.executable)
     os.environ.setdefault("PYSPARK_DRIVER_PYTHON", sys.executable)
     # macOS sometimes resolves the machine hostname to a non-loopback address;
@@ -56,6 +68,8 @@ def get_spark(cfg: dict) -> SparkSession:
         .config("spark.sql.warehouse.dir", str(warehouse))
         .config("spark.sql.shuffle.partitions", str(cfg["spark"]["shuffle_partitions"]))
         .config("spark.sql.session.timeZone", cfg["spark"]["timezone"])
+        .config("spark.driver.memory", "2g")
+        .config("spark.sql.legacy.timeParserPolicy", "LEGACY")
         .config("spark.ui.enabled", "false")
         .config("spark.driver.host", "127.0.0.1")
         .config("spark.driver.bindAddress", "127.0.0.1")

@@ -1,0 +1,1 @@
+"""Gold reusable calculations."""

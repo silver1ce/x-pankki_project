@@ -1,0 +1,14 @@
+report_id: R06
+name: "SFDR PAI core indicators"
+description: "SFDR Principal Adverse Impact indicators 1–3: GHG emissions, carbon footprint, GHG intensity."
+regulation: "SFDR RTS Annex I, Table 1, PAI 1–3"
+as_of_date: "2025-12-31"
+filters: {}
+outputs:
+  grain: [legal_entity, pai_indicator]
+  value_columns: [pai_value]
+reconciliation:
+  key_columns: [legal_entity, pai_indicator]
+  value_columns: [pai_value]
+  absolute_tolerance: 0.5
+  relative_tolerance: 0.001

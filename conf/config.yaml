@@ -1,0 +1,53 @@
+# Environment switch. Deploying the same code to Databricks means changing
+# this value (or setting XPANKKI_ENV) — not rewriting transformations.
+#   local       = PySpark + Delta on disk under data/lakehouse
+#   databricks  = Unity Catalog three-level names (catalog.schema.table)
+environment: local
+
+# Seed for synthetic data. Every generate run must produce identical CSVs
+# so reconciliation against frozen SAS baselines is repeatable.
+random_seed: 42
+
+reporting:
+  default_as_of_date: "2025-12-31"
+  reporting_currency: EUR
+  # SIMPLIFIED: a real PCAF implementation converts EVIC and outstanding
+  # amounts at the FX rate of the reporting date into the same currency as
+  # the holding. This demo always converts everything to EUR first.
+
+local:
+  catalog: local
+  schemas:
+    bronze: bronze
+    silver: silver
+    gold: gold
+    # Restricted vendor data. On Databricks this is a separate Unity Catalog
+    # schema with its own grants. Locally it is a separate folder.
+    esg_restricted: esg_restricted
+  paths:
+    landing: data/landing
+    lakehouse: data/lakehouse
+    baselines: data/baselines
+    output: data/output
+
+databricks:
+  catalog: esg_prod
+  schemas:
+    bronze: bronze
+    silver: silver
+    gold: gold
+    esg_restricted: esg_restricted
+  paths:
+    # Unity Catalog Volumes. Replace with the client's volume paths.
+    landing: /Volumes/esg_prod/landing/sas_extracts
+    lakehouse: unused_on_databricks
+    baselines: /Volumes/esg_prod/baselines
+    output: /Volumes/esg_prod/output
+
+spark:
+  app_name: xpankki_esg
+  master: local[*]
+  # Local demo is small; keep shuffle partitions low so jobs finish quickly.
+  # On Databricks the cluster default is used instead (see spark_session.py).
+  shuffle_partitions: 4
+  timezone: UTC

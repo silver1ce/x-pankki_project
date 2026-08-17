@@ -1,0 +1,14 @@
+report_id: R05
+name: "WACI by portfolio"
+description: "Weighted average carbon intensity of each portfolio (tCO2e per EUR million revenue)."
+regulation: "TCFD / SFDR PAI 3 (GHG intensity of investee companies)"
+as_of_date: "2025-12-31"
+filters: {}
+outputs:
+  grain: [portfolio_id]
+  value_columns: [waci_tco2e_per_m_eur, carbon_footprint_tco2e_per_m_eur]
+reconciliation:
+  key_columns: [portfolio_id]
+  value_columns: [waci_tco2e_per_m_eur]
+  absolute_tolerance: 0.5
+  relative_tolerance: 0.001

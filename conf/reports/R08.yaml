@@ -1,0 +1,14 @@
+report_id: R08
+name: "EU taxonomy alignment"
+description: "Taxonomy-aligned share of taxonomy-eligible exposure, by portfolio."
+regulation: "EU Taxonomy Regulation / SFDR taxonomy templates"
+as_of_date: "2025-12-31"
+filters: {}
+outputs:
+  grain: [portfolio_id]
+  value_columns: [eligible_share_pct, aligned_share_of_eligible_pct, aligned_share_of_aum_pct]
+reconciliation:
+  key_columns: [portfolio_id]
+  value_columns: [aligned_share_of_eligible_pct]
+  absolute_tolerance: 0.05
+  relative_tolerance: 0.001

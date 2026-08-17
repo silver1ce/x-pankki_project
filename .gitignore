@@ -1,0 +1,28 @@
+# Virtual environment
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Spark / Delta local artefacts
+spark-warehouse/
+.spark-warehouse/
+metastore_db/
+derby.log
+*.crc
+
+# Runtime data (landing extracts, lakehouse, baselines, report output)
+data/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.log

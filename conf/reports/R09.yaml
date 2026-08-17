@@ -1,0 +1,14 @@
+report_id: R09
+name: "Coverage and data quality summary"
+description: "Share of holdings with ESG data, unmapped issuers, and gap counts by cause."
+regulation: "Internal data-quality control supporting PCAF and SFDR disclosures"
+as_of_date: "2025-12-31"
+filters: {}
+outputs:
+  grain: [gap_cause]
+  value_columns: [row_count, market_value_eur, share_of_aum_pct]
+reconciliation:
+  key_columns: [gap_cause]
+  value_columns: [row_count, share_of_aum_pct]
+  absolute_tolerance: 0.05
+  relative_tolerance: 0.001

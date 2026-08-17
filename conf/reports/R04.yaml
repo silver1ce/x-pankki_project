@@ -1,0 +1,14 @@
+report_id: R04
+name: "PCAF data quality score"
+description: "Outstanding-weighted PCAF data quality score (1 = verified, 5 = estimated) by portfolio and asset class."
+regulation: "PCAF Financed Emissions Standard (data quality scoring)"
+as_of_date: "2025-12-31"
+filters: {}
+outputs:
+  grain: [portfolio_id, asset_class]
+  value_columns: [weighted_pcaf_score, coverage_pct]
+reconciliation:
+  key_columns: [portfolio_id, asset_class]
+  value_columns: [weighted_pcaf_score]
+  absolute_tolerance: 0.05
+  relative_tolerance: 0.01

@@ -1,0 +1,14 @@
+report_id: R07
+name: "Fossil fuel exposure"
+description: "Share of portfolio market value exposed to companies active in the fossil fuel sector (SFDR PAI 4)."
+regulation: "SFDR RTS Annex I, Table 1, PAI 4"
+as_of_date: "2025-12-31"
+filters: {}
+outputs:
+  grain: [portfolio_id]
+  value_columns: [fossil_fuel_exposure_pct, fossil_fuel_market_value_eur]
+reconciliation:
+  key_columns: [portfolio_id]
+  value_columns: [fossil_fuel_exposure_pct]
+  absolute_tolerance: 0.05
+  relative_tolerance: 0.001

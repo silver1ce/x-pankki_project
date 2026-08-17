@@ -1,0 +1,16 @@
+report_id: R01
+name: "Financed emissions — listed equity"
+description: "PCAF attribution of issuer GHG emissions to listed equity holdings."
+regulation: "PCAF Financed Emissions Standard (listed equity and corporate bonds)"
+as_of_date: "2025-12-31"
+filters:
+  instrument_types: [equity]
+outputs:
+  grain: [portfolio_id, issuer_id]
+  value_columns: [financed_emissions_tco2e, attribution_factor, market_value_eur]
+reconciliation:
+  key_columns: [portfolio_id, issuer_id]
+  value_columns: [financed_emissions_tco2e]
+  # Absolute tolerance in tCO2e; relative is |new-old| / max(|old|, 1).
+  absolute_tolerance: 0.5
+  relative_tolerance: 0.001

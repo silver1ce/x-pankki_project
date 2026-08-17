@@ -1,0 +1,15 @@
+report_id: R03
+name: "Financed emissions — business loans"
+description: "PCAF attribution of borrower GHG emissions to business loan outstanding."
+regulation: "PCAF Financed Emissions Standard (business loans and unlisted equity)"
+as_of_date: "2025-12-31"
+filters:
+  loan_purposes: [general_corporate, capex, working_capital]
+outputs:
+  grain: [portfolio_id, issuer_id]
+  value_columns: [financed_emissions_tco2e, attribution_factor, outstanding_eur]
+reconciliation:
+  key_columns: [portfolio_id, issuer_id]
+  value_columns: [financed_emissions_tco2e]
+  absolute_tolerance: 0.5
+  relative_tolerance: 0.001

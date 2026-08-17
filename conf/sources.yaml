@@ -1,0 +1,118 @@
+# Contract for every extract the SAS data warehouse delivers.
+# generate_data.py must honour these filenames, keys, and known messiness.
+# bronze/load_bronze.py must not "fix" the mess — silver does that.
+
+tables:
+  portfolios:
+    filename: portfolios.csv
+    grain: one row per portfolio
+    keys: [portfolio_id]
+    date_columns: []
+    date_format: "%Y-%m-%d"
+    restricted: false
+    bronze_schema: bronze
+    known_quality_issues:
+      - "One portfolio has a trailing space in legal_entity (trim in silver)."
+
+  holdings:
+    filename: holdings.csv
+    grain: portfolio x instrument x as_of_date
+    keys: [portfolio_id, instrument_id, as_of_date]
+    date_columns: [as_of_date]
+    date_format: "%Y-%m-%d"
+    restricted: false
+    bronze_schema: bronze
+    known_quality_issues:
+      - "A small number of duplicate rows (same keys, identical values)."
+      - "A few rows with missing market_value."
+
+  instruments:
+    filename: instruments.csv
+    grain: one row per instrument
+    keys: [instrument_id]
+    date_columns: []
+    date_format: "%Y-%m-%d"
+    restricted: false
+    bronze_schema: bronze
+    known_quality_issues:
+      - "ISIN values mix upper and lower case and a few have surrounding spaces."
+
+  issuers:
+    filename: issuers.csv
+    grain: one row per issuer
+    keys: [issuer_id]
+    date_columns: []
+    date_format: "%Y-%m-%d"
+    restricted: false
+    bronze_schema: bronze
+    known_quality_issues:
+      - "One issuer is missing LEI (null). Silver flags it, does not drop it."
+
+  loans:
+    filename: loans.csv
+    grain: one row per loan
+    keys: [loan_id]
+    date_columns: [as_of_date]
+    date_format: "%Y-%m-%d"
+    restricted: false
+    bronze_schema: bronze
+    known_quality_issues:
+      - "One loan has a negative outstanding_amount (rejected in silver)."
+
+  company_financials:
+    filename: company_financials.csv
+    grain: issuer x fiscal_year
+    keys: [issuer_id, fiscal_year]
+    date_columns: []
+    date_format: "%Y-%m-%d"
+    restricted: false
+    bronze_schema: bronze
+    known_quality_issues:
+      - "One issuer has EVIC = 0 for a year (cannot be used as PCAF denominator)."
+
+  msci_esg:
+    filename: msci_esg.csv
+    grain: provider_entity x fiscal_year
+    keys: [provider_entity_id, fiscal_year]
+    date_columns: []
+    date_format: "%Y-%m-%d"
+    restricted: true
+    bronze_schema: esg_restricted
+    known_quality_issues:
+      - "Scope 3 is missing for several entities (PCAF data-quality score degrades)."
+      - "A few rows have null esg_rating."
+
+  taxonomy_data:
+    filename: taxonomy_data.csv
+    grain: issuer x fiscal_year
+    keys: [issuer_id, fiscal_year]
+    date_columns: []
+    date_format: "%Y-%m-%d"
+    restricted: false
+    bronze_schema: bronze
+    known_quality_issues:
+      - "One row has taxonomy_aligned_share > taxonomy_eligible_share (rejected)."
+
+  fx_rates:
+    filename: fx_rates.csv
+    grain: currency x as_of_date
+    keys: [currency, as_of_date]
+    date_columns: [as_of_date]
+    # SAS DATE9. style (31DEC2025). Silver parses this; other tables use ISO.
+    date_format: "%d%b%Y"
+    restricted: false
+    bronze_schema: bronze
+    known_quality_issues:
+      - "Dates are delivered in SAS DATE9. format, unlike every other extract."
+
+  mapping_issuer_to_provider:
+    filename: mapping_issuer_to_provider.csv
+    grain: one row per internal issuer that has a vendor match
+    keys: [issuer_id]
+    date_columns: []
+    date_format: "%Y-%m-%d"
+    restricted: false
+    bronze_schema: bronze
+    known_quality_issues:
+      - "Deliberately incomplete: some issuers have no provider_entity_id."
+      - "One issuer maps to a provider id that does not exist in msci_esg."
